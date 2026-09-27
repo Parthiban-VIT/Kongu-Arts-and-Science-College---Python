@@ -934,4 +934,600 @@ with tab2:
     elif selected == "5. Simultaneous Equations":
 
         st.subheader(
-            "🔬 System of 
+            "🔬 System of Equations"
+        )
+
+        x, y = sp.symbols("x y")
+
+        eq1 = st.text_input(
+            "Equation 1",
+            "2*x + y = 7"
+        )
+
+        eq2 = st.text_input(
+            "Equation 2",
+            "x - y = 1"
+        )
+
+        def parse_equation(text):
+
+            if "=" in text:
+
+                left, right = text.split(
+                    "=",
+                    1
+                )
+
+                return sp.Eq(
+                    sp.sympify(left),
+                    sp.sympify(right)
+                )
+
+            return sp.Eq(
+                sp.sympify(text),
+                0
+            )
+
+        try:
+
+            equation1 = parse_equation(eq1)
+            equation2 = parse_equation(eq2)
+
+            solution = sp.solve(
+                (
+                    equation1,
+                    equation2
+                ),
+                (
+                    x,
+                    y
+                ),
+                dict=True
+            )
+
+            st.success(
+                f"Solution: {solution}"
+            )
+
+        except Exception as e:
+
+            st.error(
+                f"Enter valid equations using x and y. {e}"
+            )
+
+
+    # --------------------------------------------------------
+    # 6. DIFFERENTIATION
+    # --------------------------------------------------------
+
+    elif selected == "6. Differentiation":
+
+        st.subheader(
+            "🔬 Derivative Explorer"
+        )
+
+        x = sp.symbols("x")
+
+        expr_text = st.text_input(
+            "f(x) =",
+            "x**4 - 3*x**2 + 2*x"
+        )
+
+        order = st.slider(
+            "Derivative order",
+            1,
+            5,
+            1
+        )
+
+        try:
+
+            expr = sp.sympify(
+                expr_text
+            )
+
+            result = sp.diff(
+                expr,
+                x,
+                order
+            )
+
+            st.latex(
+                sp.latex(result)
+            )
+
+            st.success(
+                f"{order}-order derivative = {result}"
+            )
+
+        except Exception as e:
+
+            st.error(str(e))
+
+
+    # --------------------------------------------------------
+    # 7. INTEGRATION
+    # --------------------------------------------------------
+
+    elif selected == "7. Integration":
+
+        st.subheader(
+            "🔬 Integration Explorer"
+        )
+
+        x = sp.symbols("x")
+
+        expr_text = st.text_input(
+            "Function f(x) =",
+            "3*x**2 + 4*x + 1"
+        )
+
+        definite = st.checkbox(
+            "Calculate a definite integral"
+        )
+
+        try:
+
+            expr = sp.sympify(
+                expr_text
+            )
+
+            if definite:
+
+                col1, col2 = st.columns(2)
+
+                with col1:
+
+                    a = st.number_input(
+                        "Lower limit",
+                        value=0.0
+                    )
+
+                with col2:
+
+                    b = st.number_input(
+                        "Upper limit",
+                        value=2.0
+                    )
+
+                result = sp.integrate(
+                    expr,
+                    (
+                        x,
+                        a,
+                        b
+                    )
+                )
+
+                st.success(
+                    f"Definite integral = {result}"
+                )
+
+            else:
+
+                result = sp.integrate(
+                    expr,
+                    x
+                )
+
+                st.success(
+                    f"Indefinite integral = {result} + C"
+                )
+
+            st.latex(
+                sp.latex(result)
+            )
+
+        except Exception as e:
+
+            st.error(str(e))
+
+
+    # --------------------------------------------------------
+    # 8. LIMITS
+    # --------------------------------------------------------
+
+    elif selected == "8. Limits":
+
+        st.subheader(
+            "🔬 Limit Explorer"
+        )
+
+        x = sp.symbols("x")
+
+        expr_text = st.text_input(
+            "Expression",
+            "sin(x)/x"
+        )
+
+        point_text = st.text_input(
+            "Point",
+            "0"
+        )
+
+        direction = st.selectbox(
+            "Direction",
+            [
+                "Both sides",
+                "Right",
+                "Left"
+            ]
+        )
+
+        try:
+
+            if point_text.lower() in [
+                "oo",
+                "inf",
+                "infinity"
+            ]:
+
+                point = sp.oo
+
+            else:
+
+                point = sp.sympify(
+                    point_text
+                )
+
+            if direction == "Right":
+
+                dir_value = "+"
+
+            elif direction == "Left":
+
+                dir_value = "-"
+
+            else:
+
+                dir_value = "+-"
+
+            result = sp.limit(
+                sp.sympify(expr_text),
+                x,
+                point,
+                dir=dir_value
+            )
+
+            st.success(
+                f"Limit = {result}"
+            )
+
+            st.latex(
+                sp.latex(result)
+            )
+
+        except Exception as e:
+
+            st.error(str(e))
+
+
+    # --------------------------------------------------------
+    # 9. SERIES
+    # --------------------------------------------------------
+
+    elif selected == "9. Series Expansion":
+
+        st.subheader(
+            "🔬 Taylor / Maclaurin Series Explorer"
+        )
+
+        x = sp.symbols("x")
+
+        expr_text = st.text_input(
+            "Function",
+            "sin(x)"
+        )
+
+        point = st.number_input(
+            "Expansion point",
+            value=0.0
+        )
+
+        order = st.slider(
+            "Series order",
+            2,
+            12,
+            6
+        )
+
+        try:
+
+            expr = sp.sympify(
+                expr_text
+            )
+
+            result = sp.series(
+                expr,
+                x,
+                point,
+                order
+            )
+
+            st.success(
+                "Series expansion:"
+            )
+
+            st.latex(
+                sp.latex(result)
+            )
+
+        except Exception as e:
+
+            st.error(str(e))
+
+
+    # --------------------------------------------------------
+    # 10. MATRICES
+    # --------------------------------------------------------
+
+    elif selected == "10. Matrices":
+
+        st.subheader(
+            "🔬 Matrix Explorer"
+        )
+
+        text = st.text_area(
+            "Enter matrix — one row per line",
+            "1 2\n3 4"
+        )
+
+        try:
+
+            rows = []
+
+            for row in text.strip().splitlines():
+
+                values = row.replace(
+                    ",",
+                    " "
+                ).split()
+
+                rows.append(
+                    [
+                        sp.sympify(v)
+                        for v in values
+                    ]
+                )
+
+            A = sp.Matrix(rows)
+
+            st.write("### Matrix")
+
+            st.latex(
+                sp.latex(A)
+            )
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+
+                if A.rows == A.cols:
+
+                    st.metric(
+                        "Determinant",
+                        str(A.det())
+                    )
+
+                else:
+
+                    st.write(
+                        "Determinant is defined only for square matrices."
+                    )
+
+            with col2:
+
+                if (
+                    A.rows == A.cols
+                    and A.det() != 0
+                ):
+
+                    st.write("Inverse")
+
+                    st.latex(
+                        sp.latex(A.inv())
+                    )
+
+                else:
+
+                    st.write(
+                        "Inverse is not available."
+                    )
+
+            if A.rows == A.cols:
+
+                st.write(
+                    "### Eigenvalues"
+                )
+
+                st.write(
+                    A.eigenvals()
+                )
+
+        except Exception as e:
+
+            st.error(
+                f"Invalid matrix: {e}"
+            )
+
+
+    # --------------------------------------------------------
+    # 11. SYMBOLIC PLOTTING
+    # --------------------------------------------------------
+
+    elif selected == "11. Symbolic Plotting":
+
+        st.subheader(
+            "🔬 Function Plotter"
+        )
+
+        x = sp.symbols("x")
+
+        expr_text = st.text_input(
+            "y =",
+            "x**2 - 4*x + 3"
+        )
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+
+            xmin = st.number_input(
+                "Minimum x",
+                value=-1.0
+            )
+
+        with col2:
+
+            xmax = st.number_input(
+                "Maximum x",
+                value=5.0
+            )
+
+        try:
+
+            expr = sp.sympify(
+                expr_text
+            )
+
+            fn = sp.lambdify(
+                x,
+                expr,
+                "numpy"
+            )
+
+            X = np.linspace(
+                xmin,
+                xmax,
+                500
+            )
+
+            Y = fn(X)
+
+            fig, ax = plt.subplots(
+                figsize=(9, 4.5)
+            )
+
+            ax.plot(
+                X,
+                Y
+            )
+
+            ax.axhline(
+                0,
+                linewidth=0.8
+            )
+
+            ax.axvline(
+                0,
+                linewidth=0.8
+            )
+
+            ax.grid(
+                True,
+                alpha=0.25
+            )
+
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+
+            ax.set_title(
+                f"y = {expr}"
+            )
+
+            st.pyplot(fig)
+
+        except Exception as e:
+
+            st.error(
+                f"Unable to plot expression: {e}"
+            )
+
+
+# ============================================================
+# TAB 3 — CODE & OUTPUT
+# ============================================================
+
+with tab3:
+
+    st.subheader(
+        "💻 Python + SymPy Code"
+    )
+
+    st.code(
+        CODE[selected],
+        language="python"
+    )
+
+    st.markdown(
+        "### 🖥️ Exact Sample Output"
+    )
+
+    st.code(
+        SAMPLE_OUTPUT[selected],
+        language="text"
+    )
+
+    file_name = (
+        selected
+        .split(". ", 1)[1]
+        .lower()
+        .replace(" ", "_")
+        + ".py"
+    )
+
+    st.download_button(
+        "⬇️ Download this example as .py",
+        data=CODE[selected],
+        file_name=file_name,
+        mime="text/x-python"
+    )
+
+
+# ============================================================
+# TAB 4 — EXERCISES
+# ============================================================
+
+with tab4:
+
+    st.subheader(
+        "✏️ Practice Exercises"
+    )
+
+    st.write(
+        "Try these exercises after exploring the example. "
+        "Students should write the SymPy code themselves."
+    )
+
+    exercises = EXERCISES[selected]
+
+    for i, exercise in enumerate(
+        exercises,
+        start=1
+    ):
+
+        st.markdown(
+            f"**Exercise {i}.** {exercise}"
+        )
+
+    st.divider()
+
+    st.subheader(
+        "⭐ Challenge Activity"
+    )
+
+    st.info(
+        CHALLENGES[selected]
+    )
+
+
+# ============================================================
+# FOOTER
+# ============================================================
+
+st.divider()
+
+st.caption(
+    "SymPy Learning Lab • Symbolic Mathematics with Python • "
+    "Designed for undergraduate Mathematics practical teaching"
+)
