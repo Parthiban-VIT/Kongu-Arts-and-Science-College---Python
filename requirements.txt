@@ -1,2 +1,6 @@
 streamlit>=1.40
 matplotlib>=3.8
+streamlit>=1.40
+sympy>=1.13
+matplotlib>=3.8
+numpy>=1.26
